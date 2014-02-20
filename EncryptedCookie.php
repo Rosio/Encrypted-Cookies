@@ -1,6 +1,7 @@
 <?php
 namespace Rosio\EncryptedCookie;
 
+use EncryptedCookie\CryptoSystem\iCryptoSystem;
 use EncryptedCookie\Exception\InputTooLargeException;
 use EncryptedCookie\Exception\InputTamperedException;
 
@@ -14,6 +15,8 @@ class EncryptedCookie
 	protected $expiration;
 	protected $isSecure;
 	protected $isHttpOnly;
+
+	protected $cryptoSystem;
 
 	function __construct ($name)
 	{
@@ -41,7 +44,7 @@ class EncryptedCookie
 
 		$data = $_COOKIE[$this->name];
 
-		$data = $this->decryptData($data);
+		$data = $this->cryptoSystem->decrypt($data);
 
 		$this->data = $data;
 
@@ -55,7 +58,7 @@ class EncryptedCookie
 	 */
 	function save ()
 	{
-		$edata = $this->encryptData($this->data);
+		$edata = $this->cryptoSystem->encrypt($this->data);
 		
 		if (strlen($edata) >= 4096)
 			throw new InputTooLargeException('Total encrypted data must be less than 4kb, or it will be truncated on the client.');
@@ -79,6 +82,17 @@ class EncryptedCookie
 	   Setters
 	   ========================================================================== */
 	
+	/**
+	 * Set the cryptographic system used to encrypt/decrypt the cookie.
+	 * @param iCryptoSystem $cryptoSystem
+	 */
+	function setCryptoSystem (iCryptoSystem $cryptoSystem)
+	{
+		$this->cryptoSystem = $cryptoSystem;
+
+		return $this;
+	}
+
 	/**
 	 * Set the data to be stored in the cookie.
 	 * Max is about 2.8kb (encrypting adds size).
