@@ -2,11 +2,13 @@
 namespace Rosio\EncryptedCookie;
 
 use EncryptedCookie\Exception\InputTooLargeException;
+use EncryptedCookie\Exception\InputTamperedException;
 
 class EncryptedCookie
 {
 	protected $name;
 
+	protected $data;
 	protected $domain;
 	protected $path;
 	protected $expiration;
@@ -16,15 +18,51 @@ class EncryptedCookie
 	function __construct ($name)
 	{
 		$this->name = $name;
+
+		$this->domain = '';
+		$this->path = '/';
+		$this->expiration = 0;
+		$this->isSecure = false;
+		$this->isHttpOnly = true;
+
+		// If the cookie exists, get it's information
+		$this->load();
 	}
 
-	protected static function tryUnserialize ($data)
+	/**
+	 * Load a cookie's data if available.
+	 *
+	 * @throws InputTamperedException If The returned cookie was modified locally.
+	 */
+	function load ()
 	{
-		// Catch edge-case where the unserialized data is false.
-		if ($data === serialize(false))
+		if (!isset($_COOKIE[$this->name]))
 			return false;
 
-		return ($udata = unserialize($data)) !== false ? $udata : $data;
+		$data = $_COOKIE[$this->name];
+
+		$data = $this->decryptData($data);
+
+		$this->data = $data;
+
+		return $this;
+	}
+
+	/**
+	 * Save a cookie's data.
+	 *
+	 * @throws InputTooLargeException If the encrypted cookie is larger than 4kb (the max size a cookie can be).
+	 */
+	function save ()
+	{
+		$edata = $this->getEncryptedData();
+		
+		if (strlen($edata) >= 4096)
+			throw new InputTooLargeException('Total encrypted data must be less than 4kb, or it will be truncated on the client.');
+
+		setcookie($this->name, $edata, $this->expiration, $this->path, $this->domain, $this->isSecure, $this->isHttpOnly);
+
+		return $this;
 	}
 
 	/* =============================================================================
@@ -38,7 +76,7 @@ class EncryptedCookie
 	 */
 	function setData ($data)
 	{
-		$this->data = !is_string($data) ? serialize($data) : $data;
+		$this->data = serialize($data);
 
 		// Strlen isn't multibyte, so it will give us the number of bytes in the data string
 		if (strlen($data) > 2842)
@@ -50,9 +88,14 @@ class EncryptedCookie
 	/**
 	 * Set the expiration of the cookie.  This also corresponds to the date the cookie's data is considered invalid.
 	 * @param int $expiration A Unix timestamp.
+	 *
+	 * @throws InvalidArgumentException If the given expiration isn't a valid unix timestamp.
 	 */
 	function setExpiration ($expiration)
 	{
+		if (!is_numeric($expiration) || $expiration < 0)
+			throw new \InvalidArgumentException('Expiration must be a unix timestamp.');
+
 		$this->expiration = $expiration;
 
 		return $this;
@@ -107,7 +150,7 @@ class EncryptedCookie
 	   ========================================================================== */
 	function getData ()
 	{
-		return self::tryUnserialize($this->data);
+		return unserialize($this->data);
 	}
 
 	function getExpiration ()
