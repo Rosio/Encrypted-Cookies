@@ -1,0 +1,13 @@
+{
+    "name": "rosio/encrypted-cookie",
+    "description": "Allows easy management of encrypted cookies",
+    "authors": [
+        {
+            "name": "Ben",
+            "email": "ben@ros.io"
+        }
+    ],
+    "require": {
+
+    }
+}
