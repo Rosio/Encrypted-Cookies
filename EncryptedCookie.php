@@ -7,9 +7,24 @@ class EncryptedCookie
 {
 	protected $name;
 
+	protected $domain;
+	protected $path;
+	protected $expiration;
+	protected $isSecure;
+	protected $isHttpOnly;
+
 	function __construct ($name)
 	{
 		$this->name = $name;
+	}
+
+	protected static function tryUnserialize ($data)
+	{
+		// Catch edge-case where the unserialized data is false.
+		if ($data === serialize(false))
+			return false;
+
+		return ($udata = unserialize($data)) !== false ? $udata : $data;
 	}
 
 	/* =============================================================================
@@ -32,6 +47,10 @@ class EncryptedCookie
 		return $this;
 	}
 
+	/**
+	 * Set the expiration of the cookie.  This also corresponds to the date the cookie's data is considered invalid.
+	 * @param int $expiration A Unix timestamp.
+	 */
 	function setExpiration ($expiration)
 	{
 		$this->expiration = $expiration;
@@ -39,9 +58,46 @@ class EncryptedCookie
 		return $this;
 	}
 
+	/**
+	 * The domain the cookie is valid for.
+	 * @param string $domain
+	 */
+	function setDomain ($domain)
+	{
+		$this->domain = $domain;
+
+		return $this;
+	}
+
+	/**
+	 * The path the cookie is valid for.
+	 * @param string $path
+	 */
 	function setPath ($path)
 	{
 		$this->path = $path;
+
+		return $this;
+	}
+
+	/**
+	 * Should this cookie only be sent to the server if there is a secure connection?
+	 * @param boolean $isSecure
+	 */
+	function setSecure ($isSecure)
+	{
+		$this->isSecure = $isSecure;
+
+		return $this;
+	}
+
+	/**
+	 * Should this cookie only be available to the server (and not client-side scripts)?
+	 * @param boolean $isHttpOnly
+	 */
+	function setHttpOnly ($isHttpOnly)
+	{
+		$this->isHttpOnly = $isHttpOnly;
 
 		return $this;
 	}
@@ -51,6 +107,31 @@ class EncryptedCookie
 	   ========================================================================== */
 	function getData ()
 	{
+		return self::tryUnserialize($this->data);
+	}
 
+	function getExpiration ()
+	{
+		return $this->expiration;
+	}
+
+	function getPath ()
+	{
+		return $this->path;
+	}
+
+	function getDomain ()
+	{
+		return $this->domain;
+	}
+
+	function isSecure ()
+	{
+		return $this->isSecure;
+	}
+
+	function isHttpOnly ()
+	{
+		return $this->isHttpOnly;
 	}
 }
