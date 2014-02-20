@@ -4,13 +4,20 @@ namespace Rosio\EncryptedCookie;
 
 class CookieFactory
 {
-	static function createCookie ($name)
+	private $cryptoSystem;
+
+	function __construct (iCryptoSystem $cryptoSystem)
 	{
-		return new EncryptedCookie ($name);
+		$this->cryptoSystem = $cryptoSystem;
 	}
 
-	static function getCookie ($name)
+	function createCookie ($name)
 	{
-		return new EncryptedCookie($name)->load();
+		return new EncryptedCookie ($name)->setCryptoSystem($this->cryptoSystem);
+	}
+
+	function getCookie ($name)
+	{
+		return new EncryptedCookie($name)->setCryptoSystem($this->cryptoSystem)->load();
 	}
 }
