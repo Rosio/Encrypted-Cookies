@@ -7,6 +7,13 @@
             "email": "ben@ros.io"
         }
     ],
+
+    "autoload": {
+        "psr-4": {
+            "Rosio\\EncryptedCookie\\": "src/"
+        }
+    },
+
     "require": {
 
     },
