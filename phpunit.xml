@@ -6,4 +6,7 @@
 	stopOnIncomplete="false"
 	stopOnSkipped="false">
 
+	<testsuite name='All'>
+		<directory>Tests</directory>
+	</testsuite>
 </phpunit>
