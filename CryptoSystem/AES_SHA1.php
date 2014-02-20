@@ -21,4 +21,9 @@ class AES_SHA1
 	{
 		return $data;
 	}
+
+	protected function getRandom ($length)
+	{
+		return openssl_random_pseudo_bytes($length, true);
+	}
 }
