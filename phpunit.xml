@@ -1,0 +1,9 @@
+<phpunit
+	bootstrap="Tests/bootloader.php"
+	colors="false"
+	stopOnError="false"
+	stopOnFailure="false"
+	stopOnIncomplete="false"
+	stopOnSkipped="false">
+
+</phpunit>
