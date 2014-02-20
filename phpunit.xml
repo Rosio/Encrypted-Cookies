@@ -6,7 +6,10 @@
 	stopOnIncomplete="false"
 	stopOnSkipped="false">
 
-	<testsuite name='All'>
-		<directory>Tests</directory>
-	</testsuite>
+	<testsuites>
+		<testsuite name='All'>
+			<directory suffix="Test.php">Tests</directory>
+			<file>Tests/CryptoSystem/AES_SHA1Test.php</file>
+		</testsuite>
+	</testsuites>
 </phpunit>
