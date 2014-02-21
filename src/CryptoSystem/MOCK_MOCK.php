@@ -3,7 +3,7 @@ namespace Rosio\EncryptedCookie\CryptoSystem;
 
 class MOCK_MOCK
 {
-	public function encrypt ($data)
+	public function encrypt ($data, $expiration)
 	{
 		return $data;
 	}
