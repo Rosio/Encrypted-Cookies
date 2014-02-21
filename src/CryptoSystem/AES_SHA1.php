@@ -4,7 +4,7 @@ namespace Rosio\EncryptedCookie\CryptoSystem;
 use Rosio\EncryptedCookie\Exception\RNGUnavailableException;
 use Rosio\EncryptedCookie\Exception\InputTamperedException;
 
-class AES_SHA1
+class AES_SHA1 implements iCryptoSystem
 {
 	const IV_SIZE = 32;
 

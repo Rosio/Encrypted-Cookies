@@ -1,7 +1,7 @@
 <?php
 namespace Rosio\EncryptedCookie\CryptoSystem;
 
-class MOCK_MOCK
+class MOCK_MOCK implements iCryptoSystem
 {
 	public function encrypt ($data, $expiration)
 	{
