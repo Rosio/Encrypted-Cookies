@@ -6,7 +6,7 @@ use Rosio\EncryptedCookie\Exception\InputTamperedException;
 
 class AES_SHA1
 {
-	const IV_SIZE = 16;
+	const IV_SIZE = 32;
 
 	private $symmetricKey;
 	private $HMACKey;
