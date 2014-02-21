@@ -3,15 +3,14 @@
 namespace Tests\CryptoSystem;
 
 use Rosio\EncryptedCookie\CryptoSystem\AES_SHA1;
-use Rosio\EncryptedCookie\Exception\InputExpiredException;
 
 class AES_SHA1Test extends \PHPUnit_Framework_TestCase
 {
 	protected $cryptoSystem;
 
-	function setUp ()
+	function setUp ($suffix = '')
 	{
-		$this->cryptoSystem = new AES_SHA1('symkey', 'hmackey');
+		$this->cryptoSystem = new AES_SHA1('symkey' . $suffix, 'hmackey' . $suffix);
 	}
 
 	public function testEncryptDecrypt ()
