@@ -7,13 +7,15 @@ Based off of [RFC 6896 KoanLogic's Secure Cookie Sessions for HTTP](https://tool
 Quick Example
 -------------
 
-	// Used to create cookies with a given cryptoSystem
-	$cookieFactory = new CookieFactory(new AES_SHA1('symmetricKey', 'HMACKey'));
+```php
+// Used to create cookies with a given cryptoSystem
+$cookieFactory = new CookieFactory(new AES_SHA1('symmetricKey', 'HMACKey'));
 
-	$data = 'blah';
+$data = 'blah';
 
-	$factory->create('testCookie')->setData($data)->save();
+$factory->create('testCookie')->setData($data)->save();
 
-	$newCookie = $factory->get('testCookie');
+$newCookie = $factory->get('testCookie');
 
-	echo $newCookie->getData();
+echo $newCookie->getData();
+```
