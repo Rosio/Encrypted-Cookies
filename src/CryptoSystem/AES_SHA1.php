@@ -42,7 +42,7 @@ class AES_SHA1
 		if ($hmac !== $generatedHMAC)
 			throw new InputTamperedException('The data HMAC no longer matches.');
 
-		$data = trim(mcrypt_decrypt(MCRYPT_RIJNDAEL_256, $this->symmetricKey, $data, MCRYPT_MODE_CBC, $iv), chr(0));
+		$data = trim(mcrypt_decrypt(MCRYPT_RIJNDAEL_256, $this->symmetricKey, $encData, MCRYPT_MODE_CBC, $iv), chr(0));
 
 		return $data;
 	}
