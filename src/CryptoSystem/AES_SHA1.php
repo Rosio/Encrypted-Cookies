@@ -1,7 +1,8 @@
 <?php
 namespace Rosio\EncryptedCookie\CryptoSystem;
 
-use Rosio\EncryptedCookie\Exception\RGPUnavailable;
+use Rosio\EncryptedCookie\Exception\RNGUnavailableException;
+use Rosio\EncryptedCookie\Exception\InputTamperedException;
 
 class AES_SHA1
 {
@@ -24,13 +25,25 @@ class AES_SHA1
 
 		$encData = mcrypt_encrypt(MCRYPT_RIJNDAEL_256, $this->symmetricKey, $data, MCRYPT_MODE_CBC, $iv);
 
-		$mac = hash_hmac('sha1', base64_encode($encData) . base64_encode($atime) . base64_encode($tid) . base64_encode($iv), $this->HMACKey, true);
+		$hmac = $this->getHMAC($encData, $atime, $tid, $iv);
 
-		return base64_encode($encData) . '|' . base64_encode($atime) . '|' . base64_encode($tid) . '|' . base64_encode($iv) . '|' . base64_encode($mac);
+		return base64_encode($encData) . '|' . base64_encode($atime) . '|' . base64_encode($tid) . '|' . base64_encode($iv) . '|' . base64_encode($hmac);
 	}
 
 	public function decrypt ($data)
 	{
+		list($encData, $atime, $tid, $iv, $hmac) = array_map('base64_decode', explode('|', $data));
+
+		if ($tid !== $this->getTID())
+			throw new TIDMismatchException('The data TID no longer matches the crypto system TID.');
+
+		$generatedHMAC = $this->getHMAC($encData, $atime, $tid, $iv);
+
+		if ($hmac !== $generatedHMAC)
+			throw new InputTamperedException('The data HMAC no longer matches.');
+
+		$data = trim(mcrypt_decrypt(MCRYPT_RIJNDAEL_256, $this->symmetricKey, $data, MCRYPT_MODE_CBC, $iv), chr(0));
+
 		return $data;
 	}
 
