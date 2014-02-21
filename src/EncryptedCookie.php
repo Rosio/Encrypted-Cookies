@@ -59,7 +59,7 @@ class EncryptedCookie
 	 */
 	function save ()
 	{
-		$edata = $this->cryptoSystem->encrypt($this->data);
+		$edata = $this->cryptoSystem->encrypt($this->data, $this->expiration);
 		
 		if (strlen($edata) >= 4096)
 			throw new InputTooLargeException('Total encrypted data must be less than 4kb, or it will be truncated on the client.');
