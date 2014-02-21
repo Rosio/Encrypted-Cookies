@@ -5,6 +5,8 @@ namespace Rosio\EncryptedCookie;
 use Rosio\EncryptedCookie\CryptoSystem\iCryptoSystem;
 use Rosio\EncryptedCookie\Exception\InputTooLargeException;
 use Rosio\EncryptedCookie\Exception\InputTamperedException;
+use Rosio\EncryptedCookie\Exception\InputExpiredException;
+use Rosio\EncryptedCookie\Exception\TIDMismatchException;
 
 class EncryptedCookie
 {
@@ -45,7 +47,12 @@ class EncryptedCookie
 
 		$data = $_COOKIE[$this->name];
 
-		$data = $this->cryptoSystem->decrypt($data);
+		try {
+			$data = $this->cryptoSystem->decrypt($data);
+		}
+		catch (Exception $e) {
+			return false;
+		}
 
 		$this->data = $data;
 
