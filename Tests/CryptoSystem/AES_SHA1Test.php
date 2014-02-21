@@ -18,7 +18,7 @@ class AES_SHA1Test extends \PHPUnit_Framework_TestCase
 		$data = 'Some data. Special characters: ' . chr(1) . chr(2) . chr(3) . '.';
 
 		$encData = $this->cryptoSystem->encrypt($data);
-		$decData = $this->cryptoSystem->decrypt($data);
+		$decData = $this->cryptoSystem->decrypt($encData);
 
 		$this->assertEquals($data, $decData);
 	}
