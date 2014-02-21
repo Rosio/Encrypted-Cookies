@@ -1,9 +1,10 @@
 <?php
 namespace Rosio\EncryptedCookie;
 
-use EncryptedCookie\CryptoSystem\iCryptoSystem;
-use EncryptedCookie\Exception\InputTooLargeException;
-use EncryptedCookie\Exception\InputTamperedException;
+
+use Rosio\EncryptedCookie\CryptoSystem\iCryptoSystem;
+use Rosio\EncryptedCookie\Exception\InputTooLargeException;
+use Rosio\EncryptedCookie\Exception\InputTamperedException;
 
 class EncryptedCookie
 {
