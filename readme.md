@@ -8,6 +8,9 @@ Quick Example
 -------------
 
 ```php
+use Rosio\EncryptedCookie\CookieFactory;
+use Rosio\EncryptedCookie\CryptoSystem\AES_SHA1;
+
 // Used to create cookies with a given cryptoSystem
 $cookieFactory = new CookieFactory(new AES_SHA1('symmetricKey', 'HMACKey'));
 
