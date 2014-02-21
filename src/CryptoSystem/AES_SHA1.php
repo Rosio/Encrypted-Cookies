@@ -3,6 +3,8 @@ namespace Rosio\EncryptedCookie\CryptoSystem;
 
 use Rosio\EncryptedCookie\Exception\RNGUnavailableException;
 use Rosio\EncryptedCookie\Exception\InputTamperedException;
+use Rosio\EncryptedCookie\Exception\InputExpiredException;
+use Rosio\EncryptedCookie\Exception\TIDMismatchException;
 
 class AES_SHA1 implements iCryptoSystem
 {
