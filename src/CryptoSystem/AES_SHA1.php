@@ -40,9 +40,14 @@ class AES_SHA1
 		$random = openssl_random_pseudo_bytes($length, $wasCryptoSecure);
 
 		if ($wasCryptoSecure !== true)
-			throw new RGPUnavailable();
+			throw new RNGUnavailableException('The RNG was unable to provide truely random numbers.');
 
 		return $random;
+	}
+
+	protected function getHMAC ($encryptedData, $aTime, $tid, $iv)
+	{
+		return hash_hmac('sha1', base64_encode($encryptedData) . base64_encode($aTime) . base64_encode($tid) . base64_encode($iv), $this->HMACKey, true);
 	}
 
 	function setIVSize ($size)

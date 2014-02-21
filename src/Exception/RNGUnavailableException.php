@@ -1,7 +1,7 @@
 <?php
 namespace Rosio\EncryptedCookie\Exception;
 
-class RGPUnavailable extends \Exception
+class RNGUnavailableException extends \Exception
 {
 
 }
