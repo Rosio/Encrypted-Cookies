@@ -18,7 +18,15 @@ class EncryptedCookie
 	protected $isSecure;
 	protected $isHttpOnly;
 
+	/**
+	 * The system which encryptes and decryptes cookies.
+	 */
 	protected $cryptoSystem;
+
+	/**
+	 * The system which stores and retrieves cookies.
+	 */
+	protected $cookieStorage;
 
 	function __construct ($name)
 	{
@@ -86,6 +94,18 @@ class EncryptedCookie
 	function setCryptoSystem (iCryptoSystem $cryptoSystem)
 	{
 		$this->cryptoSystem = $cryptoSystem;
+
+		return $this;
+	}
+
+	/**
+	 * Set the system used to store and retrieve cookies.
+	 * This has been abstracted mainly for testing purposes.
+	 * @param CookieStorage $cookieStorage
+	 */
+	function setCookieStorage (CookieStorage $cookieStorage)
+	{
+		$this->cookieStorage = $cookieStorage;
 
 		return $this;
 	}
