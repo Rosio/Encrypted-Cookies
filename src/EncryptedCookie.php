@@ -194,6 +194,11 @@ class EncryptedCookie
 	/* =============================================================================
 	   Getters
 	   ========================================================================== */
+	function getName ()
+	{
+		return $this->name;
+	}
+
 	function getData ()
 	{
 		return unserialize($this->data);
