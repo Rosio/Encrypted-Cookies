@@ -49,10 +49,10 @@ class EncryptedCookie
 	 */
 	function load ()
 	{
-		if (!isset($_COOKIE[$this->name]))
+		if (!$this->cookieStorage->has($this->name))
 			return false;
 
-		$data = $_COOKIE[$this->name];
+		$data = $this->cookieStorage->get($this->name);
 
 		try {
 			$data = $this->cryptoSystem->decrypt($data);
@@ -73,13 +73,8 @@ class EncryptedCookie
 	 */
 	function save ()
 	{
-		$edata = $this->cryptoSystem->encrypt($this->data, $this->expiration);
+		$this->cookieStorage->set($this);
 		
-		if (strlen($edata) >= 4096)
-			throw new InputTooLargeException('Total encrypted data must be less than 4kb, or it will be truncated on the client.');
-
-		setcookie($this->name, $edata, $this->expiration, $this->path, $this->domain, $this->isSecure, $this->isHttpOnly);
-
 		return $this;
 	}
 
@@ -188,6 +183,16 @@ class EncryptedCookie
 	function getData ()
 	{
 		return unserialize($this->data);
+	}
+
+	function getEncryptedData ()
+	{
+		$edata = $this->cryptoSystem->encrypt($this->data, $this->expiration);
+
+		if (strlen($edata) >= 4096)
+			throw new InputTooLargeException('Total encrypted data must be less than 4kb, or it will be truncated on the client.');
+
+		return $edata;
 	}
 
 	function getExpiration ()
