@@ -4,6 +4,13 @@ Library provides basic functionality to easily create and manage encrypted cooki
 
 Based off of [RFC 6896 KoanLogic's Secure Cookie Sessions for HTTP](https://tools.ietf.org/html/rfc6896).
 
+Testing
+-------
+To run unit tests:
+
+1. `composer install`
+2. `vendor/bin/phpunit`
+
 Quick Example
 -------------
 
