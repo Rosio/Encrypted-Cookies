@@ -110,10 +110,6 @@ class EncryptedCookie
 	{
 		$this->data = serialize($data);
 
-		// Strlen isn't multibyte, so it will give us the number of bytes in the data string
-		if (strlen($data) > 2842)
-			throw new InputTooLargeException('Data must be less than 2.842kb, or the encrypted cookie will be truncated by the browser.');
-
 		return $this;
 	}
 
