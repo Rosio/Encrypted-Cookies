@@ -2,17 +2,27 @@
 
 namespace Tests;
 
+use Mockery as m;
+
 use Rosio\EncryptedCookie;
 use Rosio\EncryptedCookie\CookieFactory;
 use Rosio\EncryptedCookie\CryptoSystem\AES_SHA1;
 
 class CookieFactoryTest extends \PHPUnit_Framework_TestCase
 {
+	public function tearDown ()
+	{
+		m::close();
+	}
+
 	public function testEncryptDecrypt ()
 	{
-		$this->markTestIncomplete('Need to find workaround so as to not try and actually set a cookie.');
+		$storage = m::mock('\Rosio\EncryptedCookie\CookieStorage');
+		$storage->shouldReceive('set')->once()->with(m::type('\Rosio\EncryptedCookie\EncryptedCookie'));
+		$storage->shouldReceive('has')->once()->andReturn(true);
+		$storage->shouldReceive('get')->once()->andReturn('blah');
 
-		$factory = new CookieFactory(new AES_SHA1('symtest', 'hmactest'));
+		$factory = new CookieFactory(new AES_SHA1('symtest', 'hmactest'), $storage);
 
 		$data = 'blah';
 
@@ -20,6 +30,7 @@ class CookieFactoryTest extends \PHPUnit_Framework_TestCase
 
 		$newCookie = $factory->get('testCookie');
 
-		$this->assertEquals($data, $newCookie->getData());
+		// Returned data wasn't the correctly encrypted data, so it should fail to decrypt it
+		$this->assertFalse($newCookie->getData());
 	}
 }
