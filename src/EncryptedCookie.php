@@ -1,7 +1,6 @@
 <?php
 namespace Rosio\EncryptedCookie;
 
-
 use Rosio\EncryptedCookie\CryptoSystem\iCryptoSystem;
 use Rosio\EncryptedCookie\Exception\InputTooLargeException;
 use Rosio\EncryptedCookie\Exception\InputTamperedException;
@@ -74,16 +73,6 @@ class EncryptedCookie
 		setcookie($this->name, $edata, $this->expiration, $this->path, $this->domain, $this->isSecure, $this->isHttpOnly);
 
 		return $this;
-	}
-
-	function decryptData ($data)
-	{
-		return $data;
-	}
-
-	function encryptData ($data)
-	{
-		return $data;
 	}
 
 	/* =============================================================================
