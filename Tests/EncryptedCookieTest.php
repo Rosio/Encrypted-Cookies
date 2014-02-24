@@ -29,6 +29,8 @@ class EncryptedCookieTest extends \PHPUnit_Framework_TestCase
 
 	public function testGettersSetters ()
 	{
+		$this->assertEquals($this->cookie->getName(), 'test');
+
 		$this->cookie->setData('test');
 		$this->assertEquals($this->cookie->getData(), 'test');
 
