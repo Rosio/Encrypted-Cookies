@@ -37,9 +37,6 @@ class EncryptedCookie
 		$this->expiration = 0;
 		$this->isSecure = false;
 		$this->isHttpOnly = true;
-
-		// If the cookie exists, get it's information
-		$this->load();
 	}
 
 	/**
@@ -49,15 +46,15 @@ class EncryptedCookie
 	 */
 	function load ()
 	{
-		if (!$this->cookieStorage->has($this->name))
+		if (!$this->getCookieStorage()->has($this->name))
 			return false;
 
-		$data = $this->cookieStorage->get($this->name);
+		$data = $this->getCookieStorage()->get($this->name);
 
 		try {
-			$data = $this->cryptoSystem->decrypt($data);
+			$data = $this->getCryptoSystem()->decrypt($data);
 		}
-		catch (Exception $e) {
+		catch (\Exception $e) {
 			return false;
 		}
 
@@ -73,9 +70,25 @@ class EncryptedCookie
 	 */
 	function save ()
 	{
-		$this->cookieStorage->set($this);
-		
+		$this->getCookieStorage()->set($this);
+
 		return $this;
+	}
+
+	/**
+	 * Get the data for the cookie in its encrypted form.
+	 * @return string
+	 *
+	 * @throws InputTooLargeException If the encrypted cookie's data will be truncated by the browser.
+	 */
+	function getEncryptedData ()
+	{
+		$edata = $this->getCryptoSystem()->encrypt($this->data, $this->expiration);
+
+		if (strlen($edata) >= 4096)
+			throw new InputTooLargeException('Total encrypted data must be less than 4kb, or it will be truncated on the client.');
+
+		return $edata;
 	}
 
 	/* =============================================================================
@@ -185,16 +198,6 @@ class EncryptedCookie
 		return unserialize($this->data);
 	}
 
-	function getEncryptedData ()
-	{
-		$edata = $this->cryptoSystem->encrypt($this->data, $this->expiration);
-
-		if (strlen($edata) >= 4096)
-			throw new InputTooLargeException('Total encrypted data must be less than 4kb, or it will be truncated on the client.');
-
-		return $edata;
-	}
-
 	function getExpiration ()
 	{
 		return $this->expiration;
@@ -218,5 +221,32 @@ class EncryptedCookie
 	function isHttpOnly ()
 	{
 		return $this->isHttpOnly;
+	}
+
+	/**
+	 * Retrieve the cookie storage in use by this cookie.
+	 * @return CookieStorage
+	 */
+	protected function getCookieStorage ()
+	{
+		// Lazy load a default if one wasn't set
+		if ($this->cookieStorage === null)
+			$this->cookieStorage = new CookieStorage();
+
+		return $this->cookieStorage;
+	}
+
+	/**
+	 * Retrieve the crypto system in use by this encrypted cookie.
+	 * @return iCryptoSystem
+	 *
+	 * @throws BadMethodCallException If the crypto system has not been set.
+	 */
+	protected function getCryptoSystem ()
+	{
+		if ($this->cryptoSystem === null)
+			throw new \BadMethodCallException('Crypto system must be set before a cookie can be encrypted/decrypted.');
+
+		return $this->cryptoSystem;
 	}
 }
