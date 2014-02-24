@@ -1,7 +1,6 @@
 <?php
 namespace Rosio\EncryptedCookie;
 
-use Rosio\EncryptedCookie;
 use Rosio\EncryptedCookie\EncryptedCookie;
 
 class CookieStorage
