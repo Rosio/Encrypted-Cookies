@@ -15,6 +15,9 @@ class AES_SHA1 implements iCryptoSystem
 
 	public function __construct($symmetricKey, $HMACKey)
 	{
+		if (strlen($symmetricKey) != 32)
+			throw new \InvalidArgumentException('Symmetric key must be 32 bytes/characters long.');
+
 		$this->symmetricKey = $symmetricKey;
 		$this->HMACKey      = $HMACKey;
 	}
