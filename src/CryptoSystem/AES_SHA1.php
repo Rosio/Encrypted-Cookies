@@ -68,7 +68,7 @@ class AES_SHA1 implements iCryptoSystem
 
 	protected function getHMAC ($encryptedData, $aTime, $expiration, $tid, $iv)
 	{
-		return hash_hmac('sha1', base64_encode($encryptedData) . base64_encode($aTime) . base64_encode($expiration) . base64_encode($tid) . base64_encode($iv), $this->HMACKey, true);
+		return hash_hmac('sha256', base64_encode($encryptedData) . base64_encode($aTime) . base64_encode($expiration) . base64_encode($tid) . base64_encode($iv), $this->HMACKey, true);
 	}
 
 	function setIVSize ($size)
