@@ -39,12 +39,12 @@ class AES_SHA implements iCryptoSystem
 	{
 		list($encData, $atime, $expiration, $tid, $iv, $hmac) = array_map('base64_decode', explode('|', $data));
 
-		if (!$this->ctComp($tid, $this->getTID()))
+		if (!self::ctComp($tid, $this->getTID()))
 			throw new TIDMismatchException('The data TID no longer matches the crypto system TID.');
 
 		$generatedHMAC = $this->getHMAC($encData, $atime, $expiration, $tid, $iv);
 
-		if (!$this->ctComp($hmac, $generatedHMAC))
+		if (!self::ctComp($hmac, $generatedHMAC))
 			throw new InputTamperedException('The data HMAC no longer matches.');
 
 		if ($expiration > 0 && $atime + $expiration < time())
