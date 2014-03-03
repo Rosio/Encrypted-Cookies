@@ -7,7 +7,7 @@ use Rosio\EncryptedCookie\Cookie;
 use Rosio\EncryptedCookie\CookieStorage;
 use Rosio\EncryptedCookie\CryptoSystem\MOCK_MOCK;
 
-class EncryptedCookieTest extends \PHPUnit_Framework_TestCase
+class CookieTest extends \PHPUnit_Framework_TestCase
 {
 	private $cookie;
 
