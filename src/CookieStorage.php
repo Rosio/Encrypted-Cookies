@@ -12,8 +12,10 @@ class CookieStorage
 	protected $cryptoSystem;
 	protected $storageSystem;
 
-	public function __construct ($group = null)
+	public function __construct (iCryptoSystem $cryptoSystem, iStorageSystem $storageSystem = null, $group = null)
 	{
+		$this->cryptoSystem = $cryptoSystem;
+		$this->storageSystem = $storageSystem;
 		$this->group = $group;
 	}
 
