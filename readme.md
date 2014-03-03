@@ -24,7 +24,8 @@ $storage = new CookieStorage(new AES_SHA('32charactercryptokeymustbe32chrs', 'HM
 
 // Create a cookie
 $data = 'blah';
-Cookie::create('testCookie', $data);
+$cookie = Cookie::create('testCookie', $data);
+$storage->save($cookie);
 
 // Load the cookie
 $newCookie = $storage->load('testCookie'); // Returns a PartialCookie
