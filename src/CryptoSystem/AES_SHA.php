@@ -39,12 +39,12 @@ class AES_SHA implements iCryptoSystem
 	{
 		list($encData, $atime, $expiration, $tid, $iv, $hmac) = array_map('base64_decode', explode('|', $data));
 
-		if ($tid !== $this->getTID())
+		if (!$this->ctComp($tid, $this->getTID()))
 			throw new TIDMismatchException('The data TID no longer matches the crypto system TID.');
 
 		$generatedHMAC = $this->getHMAC($encData, $atime, $expiration, $tid, $iv);
 
-		if ($hmac !== $generatedHMAC)
+		if (!$this->ctComp($hmac, $generatedHMAC))
 			throw new InputTamperedException('The data HMAC no longer matches.');
 
 		if ($expiration > 0 && $atime + $expiration < time())
@@ -64,6 +64,19 @@ class AES_SHA implements iCryptoSystem
 			throw new RNGUnavailableException('The RNG was unable to provide truely random numbers.');
 
 		return $random;
+	}
+
+	protected function ctComp ($value1, $value2)
+	{
+		$differences = 0;
+		for ($i = 0; $i < count($value1); $i++)
+		{
+			if (!isset($value2[$i]))
+				$differences |= 1;
+			else
+			    $differences |= ord($value1[$i]) ^ ord($value2[$i]);
+		}
+		return $differences === 0;
 	}
 
 	protected function getHMAC ($encryptedData, $aTime, $expiration, $tid, $iv)
