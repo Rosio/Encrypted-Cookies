@@ -15,17 +15,18 @@ Quick Example
 -------------
 
 ```php
-use Rosio\EncryptedCookie\CookieFactory;
-use Rosio\EncryptedCookie\CryptoSystem\AES_SHA1;
+use Rosio\EncryptedCookie\CookieStorage;
+use Rosio\EncryptedCookie\Cookie;
+use Rosio\EncryptedCookie\CryptoSystem\AES_SHA;
 
 // Used to create cookies with a given cryptoSystem
-$cookieFactory = new CookieFactory(new AES_SHA1('symmetricKey', 'HMACKey'));
+$storage = new CookieStorage(new AES_SHA('32charactercryptokeymustbe32chrs', 'HMACKey'));
 
+// Create a cookie
 $data = 'blah';
+Cookie::create('testCookie', $data);
 
-$factory->create('testCookie')->setData($data)->save();
-
-$newCookie = $factory->get('testCookie');
-
+// Load the cookie
+$newCookie = $storage->load('testCookie'); // Returns a PartialCookie
 echo $newCookie->getData();
 ```
