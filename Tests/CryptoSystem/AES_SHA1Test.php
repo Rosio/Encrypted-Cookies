@@ -30,6 +30,21 @@ class AES_SHA1Test extends \PHPUnit_Framework_TestCase
 		$this->assertEquals($data, $decData);
 	}
 
+	public function testConstantTimeComparator ()
+	{
+		$this->assertTrue(AES_SHA1::ctComp('', ''));
+		$this->assertTrue(AES_SHA1::ctComp('data', 'data'));
+
+		$this->assertFalse(AES_SHA1::ctComp('', 'data'));
+		$this->assertFalse(AES_SHA1::ctComp('data', ''));
+
+		$this->assertFalse(AES_SHA1::ctComp('data', 'as'));
+		$this->assertFalse(AES_SHA1::ctComp('as', 'data'));
+
+		$this->assertFalse(AES_SHA1::ctComp(chr(0), chr(1)));
+		$this->assertTrue(AES_SHA1::ctComp(chr(1), chr(1)));
+	}
+
 	/**
 	 * @expectedException \Rosio\EncryptedCookie\Exception\InputExpiredException
 	 */
