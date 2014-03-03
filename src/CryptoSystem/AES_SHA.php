@@ -8,10 +8,10 @@ use Rosio\EncryptedCookie\Exception\TIDMismatchException;
 
 class AES_SHA implements iCryptoSystem
 {
-	const IV_SIZE = 32;
+	const IV_SIZE = 16;
 
-	private $symmetricKey;
-	private $HMACKey;
+	protected $symmetricKey;
+	protected $HMACKey;
 
 	public function __construct($symmetricKey, $HMACKey)
 	{
