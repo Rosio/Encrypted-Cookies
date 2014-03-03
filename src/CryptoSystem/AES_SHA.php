@@ -84,11 +84,6 @@ class AES_SHA implements iCryptoSystem
 		return hash_hmac('sha256', base64_encode($encryptedData) . base64_encode($aTime) . base64_encode($expiration) . base64_encode($tid) . base64_encode($iv), $this->HMACKey, true);
 	}
 
-	function setIVSize ($size)
-	{
-		$this->IVSize = $size;
-	}
-
 	/**
 	 * Get a string which uniquely represents the algorithms and keys used to encrypt the data.
 	 * @return string
