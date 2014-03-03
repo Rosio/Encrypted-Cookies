@@ -7,28 +7,91 @@ class CookieStorage
 {
 	protected $group;
 
+	protected $cryptoSystem;
+	protected $storageSystem;
+
 	public function __construct ($group = null)
 	{
 		$this->group = $group;
 	}
 
-	public function has ($name)
+	/**
+	 * Load a cookie from the browser.
+	 * @param  string        $cookieName Name of the cookie to load
+	 * @return PartialCookie             A partial cookie containing the name and data of the original cookie.
+	 *
+	 * @throws InputExpiredException If the cookie has gone past expiration.
+	 * @throws InputTamperedExceptino If the cookie's value has been tampered with.
+	 * @throws TIDMismatchException If the decryption algorithm is different from the encryption algorithm, most likely because the keys had changed.
+	 */
+	public function load ($cookieName)
 	{
-		return isset($_COOKIE[$this->getCookieName($name)]);
+		if (!$this->getStorageSystem()->has($this->getCookieName($cookieName)))
+			return null;
+
+		$partialCookie = $this->getStorageSystem()->get($this->getCookieName($cookieName));
+
+		$decryptedData = unserialize($this->getCryptoSystem()->decrypt($partialCookie->getData()));
+
+		return new PartialCookie($cookieName, $decryptedData);
 	}
 
-	public function get ($name)
+	/**
+	 * Save a cookie to the browser.
+	 * @param  Cookie $cookie
+	 * @return void
+	 */
+	public function save (Cookie $cookie)
 	{
-		return $_COOKIE[$this->getCookieName($name)];
-	}
+		$encryptedData = $this->getCryptoSystem()->encrypt(serialize($cookie->getData()));
 
-	public function set (EncryptedCookie $cookie)
-	{
-		setcookie($cookie->getName(), $cookie->getEncryptedData(), $cookie->getExpiration(), $cookie->getPath(), $cookie->getDomain(), $cookie->isSecure(), $cookie->isHttpOnly());
+		$this->getStorageSystem()->set(
+			$this->getCookieName($cookie->getName()),
+			$encryptedData,
+			$cookie->getExpiration(),
+			$cookie->getDomain(),
+			$cookie->getPath(),
+			$cookie->isSecure(),
+			$cookie->isHttpOnly()
+		);
 	}
 
 	protected function getCookieName ($name)
 	{
 		return $this->group === null ? $name : $this->group . '_' . $name;
+	}
+
+	/* =============================================================================
+	   Setters
+	   ========================================================================== */
+	
+	public function setCryptoSystem (iCryptoSystem $cryptoSystem)
+	{
+		$this->cryptoSystem = $cryptoSystem;
+	}
+
+	public function setStorageSystem (iStorageSystem $storageSystem)
+	{
+		$this->storageSystem = $storageSystem;
+	}
+
+	/* =============================================================================
+	   Getters
+	   ========================================================================== */
+	
+	protected function getStorageSystem ()
+	{
+		if ($this->storageSystem === null)
+			$this->storageSystem = new StorageSystem\NativeStorageSystem;
+
+		return $this->storageSystem;
+	}
+
+	protected function getCryptoSystem ()
+	{
+		if ($this->cryptoSystem === null)
+			throw new \BadMethodCallException('Crypto System must be set before trying to handle cookies.');
+
+		return $this->cryptoSystem;
 	}
 }
