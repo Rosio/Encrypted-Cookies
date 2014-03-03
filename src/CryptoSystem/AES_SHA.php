@@ -69,12 +69,12 @@ class AES_SHA implements iCryptoSystem
 	protected function ctComp ($value1, $value2)
 	{
 		$differences = 0;
-		for ($i = 0; $i < count($value1); $i++)
+		for ($i = 0; $i < max(strlen($value1), strlen($value2)); $i++)
 		{
-			if (!isset($value2[$i]))
-				$differences |= 1;
-			else
-			    $differences |= ord($value1[$i]) ^ ord($value2[$i]);
+			$v1 = isset($value1[$i]) ? ord($value1[$i]) : -1;
+			$v2 = isset($value2[$i]) ? ord($value2[$i]) : -1;
+
+		    $differences |= $v1 ^ $v2;
 		}
 		return $differences === 0;
 	}
