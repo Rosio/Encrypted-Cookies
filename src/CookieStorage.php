@@ -2,6 +2,8 @@
 namespace Rosio\EncryptedCookie;
 
 use Rosio\EncryptedCookie\EncryptedCookie;
+use Rosio\EncryptedCookie\StorageSystem\iStorageSystem;
+use Rosio\EncryptedCookie\CryptoSystem\iCryptoSystem;
 
 class CookieStorage
 {
@@ -29,9 +31,9 @@ class CookieStorage
 		if (!$this->getStorageSystem()->has($this->getCookieName($cookieName)))
 			return null;
 
-		$partialCookie = $this->getStorageSystem()->get($this->getCookieName($cookieName));
+		$data = $this->getStorageSystem()->get($this->getCookieName($cookieName));
 
-		$decryptedData = unserialize($this->getCryptoSystem()->decrypt($partialCookie->getData()));
+		$decryptedData = unserialize($this->getCryptoSystem()->decrypt($data));
 
 		return new PartialCookie($cookieName, $decryptedData);
 	}
@@ -43,7 +45,7 @@ class CookieStorage
 	 */
 	public function save (Cookie $cookie)
 	{
-		$encryptedData = $this->getCryptoSystem()->encrypt(serialize($cookie->getData()));
+		$encryptedData = $this->getCryptoSystem()->encrypt(serialize($cookie->getData()), $cookie->getExpiration());
 
 		$this->getStorageSystem()->set(
 			$this->getCookieName($cookie->getName()),
