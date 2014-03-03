@@ -1,7 +1,7 @@
 <?php
 namespace Rosio\EncryptedCookie\Exception;
 
-class InputTooLargeException extends \Exception
+class InputTooLargeException extends EncryptedCookieException
 {
 
 }
