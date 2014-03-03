@@ -6,7 +6,7 @@ use Rosio\EncryptedCookie\Exception\InputTamperedException;
 use Rosio\EncryptedCookie\Exception\InputExpiredException;
 use Rosio\EncryptedCookie\Exception\TIDMismatchException;
 
-class AES_SHA1 implements iCryptoSystem
+class AES_SHA implements iCryptoSystem
 {
 	const IV_SIZE = 32;
 
@@ -28,7 +28,7 @@ class AES_SHA1 implements iCryptoSystem
 		$atime = time();
 		$tid = $this->getTID();
 
-		$encData = mcrypt_encrypt(MCRYPT_RIJNDAEL_256, $this->symmetricKey, $data, MCRYPT_MODE_CBC, $iv);
+		$encData = mcrypt_encrypt(MCRYPT_RIJNDAEL_128, $this->symmetricKey, $data, MCRYPT_MODE_CBC, $iv);
 
 		$hmac = $this->getHMAC($encData, $atime, $expiration, $tid, $iv);
 
@@ -82,6 +82,6 @@ class AES_SHA1 implements iCryptoSystem
 	 */
 	function getTID ()
 	{
-		return substr(md5(md5($this->symmetricKey) . 'AES_SHA1' . md5($this->HMACKey)), 0, 8);
+		return substr(md5(md5($this->symmetricKey) . 'AES_SHA' . md5($this->HMACKey)), 0, 8);
 	}
 }
