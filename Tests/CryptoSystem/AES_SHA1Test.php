@@ -10,7 +10,7 @@ class AES_SHA1Test extends \PHPUnit_Framework_TestCase
 
 	function setUp ()
 	{
-		$this->cryptoSystem = new AES_SHA1($this->getRandom(32), $this->getRandom(32));
+		$this->cryptoSystem = new AES_SHA1($this->getRandom(32), "SomeHMAC");
 	}
 
 	public function testEncryptDecrypt ()
