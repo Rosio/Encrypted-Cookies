@@ -19,11 +19,6 @@ class CookieStorageTest extends \PHPUnit_Framework_TestCase
 
 	public function testEncryptDecrypt ()
 	{
-		// $storage = m::mock('\Rosio\EncryptedCookie\StorageSystem\NativeStorageSystem');
-		// $storage->shouldReceive('set')->once()->with(m::type('\Rosio\EncryptedCookie\Cookie'));
-		// $storage->shouldReceive('has')->once()->andReturn(true);
-		// $storage->shouldReceive('get')->once()->andReturn('blah');
-
 		$storage = new CookieStorage;
 
 		$storage->setCryptoSystem(new CryptoSystem\AES_SHA('asdfqwerasasdfqwerasasdfqwerassd', 'hmactest'));
