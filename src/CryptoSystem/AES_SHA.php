@@ -39,12 +39,12 @@ class AES_SHA implements iCryptoSystem
 	{
 		list($encData, $atime, $expiration, $tid, $iv, $hmac) = array_map('base64_decode', explode('|', $data));
 
-		if (!$this->ctComp($tid, $this->getTID()))
+		if (!self::ctComp($tid, $this->getTID()))
 			throw new TIDMismatchException('The data TID no longer matches the crypto system TID.');
 
 		$generatedHMAC = $this->getHMAC($encData, $atime, $expiration, $tid, $iv);
 
-		if (!$this->ctComp($hmac, $generatedHMAC))
+		if (!self::ctComp($hmac, $generatedHMAC))
 			throw new InputTamperedException('The data HMAC no longer matches.');
 
 		if ($expiration > 0 && $atime + $expiration < time())
@@ -66,7 +66,7 @@ class AES_SHA implements iCryptoSystem
 		return $random;
 	}
 
-	protected function ctComp ($value1, $value2)
+	static function ctComp ($value1, $value2)
 	{
 		$differences = 0;
 		for ($i = 0; $i < max(strlen($value1), strlen($value2)); $i++)
@@ -82,11 +82,6 @@ class AES_SHA implements iCryptoSystem
 	protected function getHMAC ($encryptedData, $aTime, $expiration, $tid, $iv)
 	{
 		return hash_hmac('sha256', base64_encode($encryptedData) . base64_encode($aTime) . base64_encode($expiration) . base64_encode($tid) . base64_encode($iv), $this->HMACKey, true);
-	}
-
-	function setIVSize ($size)
-	{
-		$this->IVSize = $size;
 	}
 
 	/**

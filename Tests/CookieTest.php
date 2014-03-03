@@ -3,11 +3,11 @@
 namespace Tests;
 
 use \Mockery as m;
-use Rosio\EncryptedCookie\EncryptedCookie;
+use Rosio\EncryptedCookie\Cookie;
 use Rosio\EncryptedCookie\CookieStorage;
 use Rosio\EncryptedCookie\CryptoSystem\MOCK_MOCK;
 
-class EncryptedCookieTest extends \PHPUnit_Framework_TestCase
+class CookieTest extends \PHPUnit_Framework_TestCase
 {
 	private $cookie;
 
@@ -23,8 +23,7 @@ class EncryptedCookieTest extends \PHPUnit_Framework_TestCase
 
 	protected function createCookie ($name = 'test')
 	{
-		$this->cookie = new EncryptedCookie($name);
-		$this->cookie->setCryptoSystem(new MOCK_MOCK);
+		$this->cookie = new Cookie($name);
 	}
 
 	public function testGettersSetters ()

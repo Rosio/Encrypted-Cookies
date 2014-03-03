@@ -1,7 +1,7 @@
 <?php
 namespace Rosio\EncryptedCookie\Exception;
 
-class InputTamperedException extends \Exception
+class InputTamperedException extends EncryptedCookieException
 {
 
 }

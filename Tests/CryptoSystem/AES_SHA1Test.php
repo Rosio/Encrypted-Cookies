@@ -8,19 +8,41 @@ class AES_SHA1Test extends \PHPUnit_Framework_TestCase
 {
 	protected $cryptoSystem;
 
-	function setUp ($suffix = '1')
+	function setUp ()
 	{
-		$this->cryptoSystem = new AES_SHA1('asdfdasdfdasdfdasdfdasdfdasdfds' . $suffix, 'hmackey' . $suffix);
+		$this->cryptoSystem = new AES_SHA1($this->getRandom(32), "SomeHMAC");
 	}
 
 	public function testEncryptDecrypt ()
 	{
+		$data = 'Some data.';
+
+		$encData = $this->cryptoSystem->encrypt($data, 0);
+		$decData = $this->cryptoSystem->decrypt($encData);
+
+		$this->assertEquals($data, $decData);
+
 		$data = 'Some data. Special characters: ' . chr(1) . chr(2) . chr(3) . '.';
 
 		$encData = $this->cryptoSystem->encrypt($data, 0);
 		$decData = $this->cryptoSystem->decrypt($encData);
 
 		$this->assertEquals($data, $decData);
+	}
+
+	public function testConstantTimeComparator ()
+	{
+		$this->assertTrue(AES_SHA1::ctComp('', ''));
+		$this->assertTrue(AES_SHA1::ctComp('data', 'data'));
+
+		$this->assertFalse(AES_SHA1::ctComp('', 'data'));
+		$this->assertFalse(AES_SHA1::ctComp('data', ''));
+
+		$this->assertFalse(AES_SHA1::ctComp('data', 'as'));
+		$this->assertFalse(AES_SHA1::ctComp('as', 'data'));
+
+		$this->assertFalse(AES_SHA1::ctComp(chr(0), chr(1)));
+		$this->assertTrue(AES_SHA1::ctComp(chr(1), chr(1)));
 	}
 
 	/**
@@ -53,7 +75,7 @@ class AES_SHA1Test extends \PHPUnit_Framework_TestCase
 		$data = 'Some data.';
 
 		$encData = $this->cryptoSystem->encrypt($data, 2);
-		$this->setUp('2'); // Force new keys
+		$this->setUp(); // Force new keys
 		$decData = $this->cryptoSystem->decrypt($encData);
 	}
 
@@ -70,5 +92,16 @@ class AES_SHA1Test extends \PHPUnit_Framework_TestCase
 		$this->assertNotEquals($encData, $badEncData);
 		
 		$decData = $this->cryptoSystem->decrypt($badEncData);
+	}
+
+	protected function getRandom ($length)
+	{
+		$str = '';
+		$letters = range('a', 'z');
+
+		for ($i = 0; $i < $length; $i++)
+			$str .= $letters[rand(0, count($letters) - 1)];
+
+		return $str;
 	}
 }
