@@ -8,9 +8,9 @@ class AES_SHA1Test extends \PHPUnit_Framework_TestCase
 {
 	protected $cryptoSystem;
 
-	function setUp ($suffix = '')
+	function setUp ($suffix = '1')
 	{
-		$this->cryptoSystem = new AES_SHA1('symkey' . $suffix, 'hmackey' . $suffix);
+		$this->cryptoSystem = new AES_SHA1('asdfdasdfdasdfdasdfdasdfdasdfds' . $suffix, 'hmackey' . $suffix);
 	}
 
 	public function testEncryptDecrypt ()

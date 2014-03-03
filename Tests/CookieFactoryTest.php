@@ -22,7 +22,7 @@ class CookieFactoryTest extends \PHPUnit_Framework_TestCase
 		$storage->shouldReceive('has')->once()->andReturn(true);
 		$storage->shouldReceive('get')->once()->andReturn('blah');
 
-		$factory = new CookieFactory(new AES_SHA1('symtest', 'hmactest'), $storage);
+		$factory = new CookieFactory(new AES_SHA1('asdfdasdfdasdfdasdfdasdfdasdfdsd', 'hmactest'), $storage);
 
 		$data = 'blah';
 
