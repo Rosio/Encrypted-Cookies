@@ -8,13 +8,20 @@ class AES_SHA1Test extends \PHPUnit_Framework_TestCase
 {
 	protected $cryptoSystem;
 
-	function setUp ($suffix = '')
+	function setUp ()
 	{
-		$this->cryptoSystem = new AES_SHA1('symkey' . $suffix, 'hmackey' . $suffix);
+		$this->cryptoSystem = new AES_SHA1($this->getRandom(32), $this->getRandom(32));
 	}
 
 	public function testEncryptDecrypt ()
 	{
+		$data = 'Some data.';
+
+		$encData = $this->cryptoSystem->encrypt($data, 0);
+		$decData = $this->cryptoSystem->decrypt($encData);
+
+		$this->assertEquals($data, $decData);
+
 		$data = 'Some data. Special characters: ' . chr(1) . chr(2) . chr(3) . '.';
 
 		$encData = $this->cryptoSystem->encrypt($data, 0);
@@ -53,7 +60,7 @@ class AES_SHA1Test extends \PHPUnit_Framework_TestCase
 		$data = 'Some data.';
 
 		$encData = $this->cryptoSystem->encrypt($data, 2);
-		$this->setUp('2'); // Force new keys
+		$this->setUp(); // Force new keys
 		$decData = $this->cryptoSystem->decrypt($encData);
 	}
 
@@ -70,5 +77,16 @@ class AES_SHA1Test extends \PHPUnit_Framework_TestCase
 		$this->assertNotEquals($encData, $badEncData);
 		
 		$decData = $this->cryptoSystem->decrypt($badEncData);
+	}
+
+	protected function getRandom ($length)
+	{
+		$str = '';
+		$letters = range('a', 'z');
+
+		for ($i = 0; $i < $length; $i++)
+			$str .= $letters[rand(0, count($letters) - 1)];
+
+		return $str;
 	}
 }
