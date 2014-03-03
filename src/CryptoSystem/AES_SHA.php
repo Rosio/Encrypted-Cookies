@@ -50,7 +50,7 @@ class AES_SHA implements iCryptoSystem
 		if ($expiration > 0 && $atime + $expiration < time())
 			throw new InputExpiredException('The expiration time on the data has been reached.');
 
-		$data = trim(mcrypt_decrypt(MCRYPT_RIJNDAEL_256, $this->symmetricKey, $encData, MCRYPT_MODE_CBC, $iv), chr(0));
+		$data = trim(mcrypt_decrypt(MCRYPT_RIJNDAEL_128, $this->symmetricKey, $encData, MCRYPT_MODE_CBC, $iv), chr(0));
 
 		return $data;
 	}
