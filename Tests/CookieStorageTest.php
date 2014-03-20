@@ -19,10 +19,7 @@ class CookieStorageTest extends \PHPUnit_Framework_TestCase
 
 	public function testEncryptDecrypt ()
 	{
-		$storage = new CookieStorage;
-
-		$storage->setCryptoSystem(new CryptoSystem\AES_SHA('asdfqwerasasdfqwerasasdfqwerassd', 'hmactest'));
-		$storage->setStorageSystem(new StorageSystem\MockStorageSystem);
+		$storage = new CookieStorage(new CryptoSystem\AES_SHA('asdfqwerasasdfqwerasasdfqwerassd', 'hmactest'), new StorageSystem\MockStorageSystem);
 
 		$data = 'blah';
 
