@@ -1,7 +1,7 @@
 Encrypted Cookie
 ================
 
-![Build Status](https://api.travis-ci.org/Rosio/Encrypted-Cookies.svg)
+![Build Status](https://circleci.com/gh/Rosio/Encrypted-Cookies.png?circle-token=5161d88db7a6be025de635195d1a7ac6a430787c)
 
 Library provides basic functionality to easily create and manage encrypted cookies.
 
