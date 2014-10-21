@@ -27,7 +27,7 @@ $storage = new CookieStorage(new AES_SHA('32charactercryptokeymustbe32chrs', 'HM
 
 // Create a cookie
 $data = 'blah';
-$cookie = Cookie::create('testCookie', array('data' => $data));
+$cookie = Cookie::create('testCookie', $data);
 $storage->save($cookie);
 
 // Load the cookie
