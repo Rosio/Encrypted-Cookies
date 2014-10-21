@@ -41,42 +41,6 @@ class EncryptedCookie
 	}
 
 	/**
-	 * Load a cookie's data if available.
-	 *
-	 * @throws InputTamperedException If The returned cookie was modified locally.
-	 */
-	function load ()
-	{
-		if (!$this->getCookieStorage()->has($this->name))
-			return false;
-
-		$data = $this->getCookieStorage()->get($this->name);
-
-		try {
-			$data = $this->getCryptoSystem()->decrypt($data);
-		}
-		catch (\Exception $e) {
-			return false;
-		}
-
-		$this->data = $data;
-
-		return $this;
-	}
-
-	/**
-	 * Save a cookie's data.
-	 *
-	 * @throws InputTooLargeException If the encrypted cookie is larger than 4kb (the max size a cookie can be).
-	 */
-	function save ()
-	{
-		$this->getCookieStorage()->set($this);
-
-		return $this;
-	}
-
-	/**
 	 * Get the data for the cookie in its encrypted form.
 	 * @return string
 	 *
